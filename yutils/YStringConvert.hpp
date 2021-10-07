@@ -49,7 +49,7 @@ static std::wstring UTF8ToUnicode(const char* str)
 	std::wstring res;
 	auto len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
 	res.resize(len, 0);
-	MultiByteToWideChar(CP_UTF8, 0, str, -1, res.data(), len);
+	MultiByteToWideChar(CP_UTF8, 0, str, -1, (LPWSTR)res.data(), len);
 	return res;
 }
 
@@ -58,7 +58,7 @@ static std::string UnicodeToUTF8(const wchar_t* str)
 	std::string res;
 	auto len = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
 	res.resize(len, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str, -1, res.data(), len, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, str, -1, (LPSTR)res.data(), len, NULL, NULL);
 	return res;
 }
 
@@ -67,7 +67,7 @@ static std::wstring ANSIToUnicode(const char* str)
 	std::wstring res;
 	auto len = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, 0);
 	res.resize(len, 0);
-	MultiByteToWideChar(CP_ACP, 0, str, -1, res.data(), len);
+	MultiByteToWideChar(CP_ACP, 0, str, -1, (LPWSTR)res.data(), len);
 	return res;
 }
 
@@ -76,7 +76,7 @@ static std::string UnicodeToANSI(const wchar_t* str)
 	std::string res;
 	auto len = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
 	res.resize(len, 0);
-	WideCharToMultiByte(CP_ACP, 0, str, -1, res.data(), len, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, str, -1, (LPSTR)res.data(), len, NULL, NULL);
 	return res;
 }
 
