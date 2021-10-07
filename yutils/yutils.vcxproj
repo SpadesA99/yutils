@@ -338,6 +338,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="StaticLibTemplates.h" />
+    <ClInclude Include="YCppDefer.hpp" />
+    <ClInclude Include="YStringConvert.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StaticLibTemplates.cpp" />

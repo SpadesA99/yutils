@@ -18,28 +18,6 @@ static out_type convert(const in_value& t)
 	return result;
 }
 
-//template <typename... Args>
-//static std::string format(_In_z_ _Printf_format_string_ char const* const fmt, Args... args) {
-//	try
-//	{
-//		auto size = snprintf(nullptr, 0, fmt, args...);
-//		if (size <= 0) {
-//			return "";
-//		}
-//		size += 1;
-//		auto formatted = new char[size] {0};
-//		defer(if (formatted) {
-//			delete[]formatted; formatted = nullptr;
-//		});
-//		sprintf_s(formatted, size, fmt, args...);
-//		return formatted;
-//	}
-//	catch (...)
-//	{
-//		return "";
-//	}
-//}
-
 static std::string decodeURIComponent(std::string encoded) {
 	std::string decoded = encoded;
 	std::smatch sm;
@@ -66,15 +44,12 @@ static std::string decodeURIComponent(std::string encoded) {
 	return decoded;
 }
 
-#define new_str(_name,_len,_type) std::shared_ptr<_type[]> ##_name(new _type[_len + 2]); RtlZeroMemory(##_name.get(), _len + 2);
-
 static std::wstring UTF8ToUnicode(const char* str)
 {
 	std::wstring res;
 	auto len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
-	new_str(result, len, wchar_t);
-	MultiByteToWideChar(CP_UTF8, 0, str, -1, result.get(), len);
-	res = result.get();
+	res.resize(len, 0);
+	MultiByteToWideChar(CP_UTF8, 0, str, -1, res.data(), len);
 	return res;
 }
 
@@ -82,9 +57,8 @@ static std::string UnicodeToUTF8(const wchar_t* str)
 {
 	std::string res;
 	auto len = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
-	new_str(result, len, char);
-	WideCharToMultiByte(CP_UTF8, 0, str, -1, result.get(), len, NULL, NULL);
-	res = result.get();
+	res.resize(len, 0);
+	WideCharToMultiByte(CP_UTF8, 0, str, -1, res.data(), len, NULL, NULL);
 	return res;
 }
 
@@ -101,9 +75,8 @@ static std::string UnicodeToANSI(const wchar_t* str)
 {
 	std::string res;
 	auto len = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
-	new_str(result, len, char);
-	WideCharToMultiByte(CP_ACP, 0, str, -1, result.get(), len, NULL, NULL);
-	res = result.get();
+	res.resize(len, 0);
+	WideCharToMultiByte(CP_ACP, 0, str, -1, res.data(), len, NULL, NULL);
 	return res;
 }
 
