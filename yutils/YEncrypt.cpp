@@ -196,3 +196,23 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, i
 
 	return result;
 }
+
+std::string YEncrypt::Md5(std::string buff)
+{
+	MD5_CTX ctx;
+	unsigned char outmd[16];
+
+	memset(outmd, 0, sizeof(outmd));
+	MD5_Init(&ctx);
+	MD5_Update(&ctx, buff.data(), buff.length());
+	MD5_Final(outmd, &ctx);
+
+	std::string result;
+	for (size_t i = 0; i < 16; i++)
+	{
+		char tmp[4]{ 0 };
+		sprintf_s(tmp, "%02X", outmd[i]);
+		result += tmp;
+	}
+	return result;
+}

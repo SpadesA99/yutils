@@ -8,6 +8,7 @@
 #include <openssl/evp.h>
 #include <openssl/bio.h>
 #include <openssl/err.h>
+#include <openssl/md5.h>
 
 //https://blog.csdn.net/u011029517/article/details/79392522
 
@@ -39,4 +40,6 @@ namespace YEncrypt {
 	std::string RsaLongEncrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey);
 
 	std::string RsaLongDecrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey);
+
+	std::string Md5(std::string buff);
 }
