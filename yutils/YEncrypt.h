@@ -36,7 +36,7 @@ namespace YEncrypt {
 
 #define PLAINBUFFLEN 0x1000
 
-	std::string RsaLongEncrypt(std::string rawbody, unsigned char* publicKey, int block_len);
+	std::string RsaLongEncrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey);
 
-	std::string RsaLongDecrypt(std::string rawbody, unsigned char* privateKey, int block_len);
+	std::string RsaLongDecrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey);
 }

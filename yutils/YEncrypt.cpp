@@ -112,7 +112,7 @@ std::string YEncrypt::base64Decode(char* input, int length, bool newLine)
 	return result;
 }
 
-std::string  YEncrypt::RsaLongEncrypt(std::string rawbody, unsigned char* publicKey, int block_len)
+std::string  YEncrypt::RsaLongEncrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey)
 {
 	unsigned char* plainBuff = new unsigned char[PLAINBUFFLEN];
 	defer(if (plainBuff) {
@@ -126,7 +126,15 @@ std::string  YEncrypt::RsaLongEncrypt(std::string rawbody, unsigned char* public
 		ZeroMemory(plainBuff, PLAINBUFFLEN);
 		auto plainText = rawbody.substr(i, block_len);
 
-		int encrypted_length = public_encrypt((unsigned char*)plainText.data(), plainText.length(), publicKey, plainBuff);
+		int encrypted_length = -1;
+		if (isbublickey)
+		{
+			encrypted_length = public_encrypt((unsigned char*)plainText.data(), plainText.length(), key, plainBuff);
+		}
+		else {
+			encrypted_length = private_encrypt((unsigned char*)plainText.data(), plainText.length(), key, plainBuff);
+		}
+
 		if (encrypted_length <= 0)
 		{
 			printLastError((char*)"public_encrypt failed ");
@@ -141,7 +149,7 @@ std::string  YEncrypt::RsaLongEncrypt(std::string rawbody, unsigned char* public
 	return result.substr(0, result.length() - 2);
 }
 
-std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* privateKey, int block_len)
+std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey)
 {
 	std::vector <std::string > encplain;
 
@@ -170,10 +178,17 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* privat
 	for (auto& item : encplain) {
 		ZeroMemory(plainBuff, PLAINBUFFLEN);
 		auto plain = base64Decode((char*)item.data(), item.length(), false);
-		if (private_decrypt((unsigned char*)plain.data(), plain.length(), privateKey, plainBuff) == -1)
+		int decrypt_length = -1;
+		if (isbublickey) {
+			decrypt_length = public_decrypt((unsigned char*)plain.data(), plain.length(), key, plainBuff);
+		}
+		else {
+			decrypt_length = private_decrypt((unsigned char*)plain.data(), plain.length(), key, plainBuff);
+		}
+
+		if (decrypt_length == -1)
 		{
 			printLastError("private_decrypt");
-			return "";
 		}
 
 		result += (char*)plainBuff;
