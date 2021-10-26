@@ -64,7 +64,7 @@ int  YEncrypt::public_decrypt(unsigned char* enc_data, int data_len, unsigned ch
 	return result;
 }
 
-std::string  YEncrypt::base64Encode(const char* buffer, int length, bool newLine)
+std::string YEncrypt::base64Encode(const char* buffer, int length, bool newLine)
 {
 	auto b64 = BIO_new(BIO_f_base64());
 	if (!b64)
@@ -90,10 +90,10 @@ std::string  YEncrypt::base64Encode(const char* buffer, int length, bool newLine
 	return result;
 }
 
-std::string  YEncrypt::base64Decode(char* input, int length, bool newLine)
+std::string YEncrypt::base64Decode(char* input, int length, bool newLine)
 {
 	std::string result;
-	result.resize(length, 0);
+	result.resize(length + 1, 0);
 
 	auto b64 = BIO_new(BIO_f_base64());
 	if (!b64)
@@ -107,8 +107,8 @@ std::string  YEncrypt::base64Decode(char* input, int length, bool newLine)
 	}
 	auto bmem = BIO_new_mem_buf(input, length);
 	bmem = BIO_push(b64, bmem);
-	BIO_read(bmem, (void*)result.data(), length);
-
+	auto len = BIO_read(bmem, (void*)result.data(), length);
+	result.resize(len);
 	return result;
 }
 
