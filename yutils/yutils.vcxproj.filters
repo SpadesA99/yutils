@@ -16,6 +16,9 @@
     <Filter Include="string_utils">
       <UniqueIdentifier>{cb2f03f1-d8b3-485f-9f03-725712df685d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="encrypt">
+      <UniqueIdentifier>{5f756724-1ff6-413a-9c0b-fb9fac639fa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StaticLibTemplates.h">
@@ -27,10 +30,16 @@
     <ClInclude Include="YStringConvert.hpp">
       <Filter>string_utils</Filter>
     </ClInclude>
+    <ClInclude Include="YEncrypt.h">
+      <Filter>encrypt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StaticLibTemplates.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="YEncrypt.cpp">
+      <Filter>encrypt</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

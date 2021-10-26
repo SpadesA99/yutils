@@ -337,11 +337,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="YEncrypt.h" />
     <ClInclude Include="StaticLibTemplates.h" />
     <ClInclude Include="YCppDefer.hpp" />
     <ClInclude Include="YStringConvert.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="YEncrypt.cpp" />
     <ClCompile Include="StaticLibTemplates.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
