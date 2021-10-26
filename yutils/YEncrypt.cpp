@@ -189,6 +189,7 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, i
 		if (decrypt_length == -1)
 		{
 			printLastError("private_decrypt");
+			return "";
 		}
 
 		result += (char*)plainBuff;
