@@ -144,9 +144,9 @@ std::string  YEncrypt::RsaLongEncrypt(std::string rawbody, unsigned char* key, i
 	}
 	std::string result;
 	for (auto& item : encplain) {
-		result += item + "$$";
+		result += item + ".";
 	}
-	return result.substr(0, result.length() - 2);
+	return result.substr(0, result.length() - 1);
 }
 
 std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey)
@@ -155,14 +155,14 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, i
 
 	while (true)
 	{
-		int lastindex = rawbody.find("$");
+		int lastindex = rawbody.find(".");
 		if (lastindex == -1)
 		{
 			break;
 		}
 
 		encplain.push_back(rawbody.substr(0, lastindex));
-		rawbody = rawbody.substr(lastindex + 2, rawbody.length());
+		rawbody = rawbody.substr(lastindex + 1, rawbody.length());
 	}
 	if (rawbody != "")
 	{
