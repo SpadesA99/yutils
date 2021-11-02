@@ -21,10 +21,25 @@ std::string YEncrypt::Sha256(std::string buff)
 	return result;
 }
 
-int YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256, unsigned char* encrypted, unsigned int* len)
+std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256)
 {
 	RSA* rsa = CreateRsa(key, 0);
-	return RSA_sign(NID_sha256, (const unsigned char*)sha256.data(), SHA256_DIGEST_LENGTH, encrypted, len, rsa);
+
+	unsigned char* plainBuff = new unsigned char[PLAINBUFFLEN] {0};
+	defer(if (plainBuff) {
+		delete[] plainBuff;
+		plainBuff = nullptr;
+	});
+	unsigned int sign_length = 0;
+
+	auto sign_res = RSA_sign(NID_sha256, (const unsigned char*)sha256.data(), SHA256_DIGEST_LENGTH, plainBuff, &sign_length, rsa);
+	if (sign_res == -1)
+	{
+		printLastError("private_decrypt");
+		return "";
+	}
+
+	return base64Encode((const char*)plainBuff, sign_length, false);
 }
 
 RSA* YEncrypt::CreateRsa(unsigned char* key, bool isbublickey)

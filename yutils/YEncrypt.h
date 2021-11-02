@@ -21,7 +21,7 @@ namespace YEncrypt {
 
 	std::string Sha256(std::string buff);
 
-	int private_sign_sha256(unsigned char* key, std::string sha256, unsigned char* encrypted, unsigned int* len);
+	std::string private_sign_sha256(unsigned char* key, std::string sha256);
 
 	RSA* CreateRsa(unsigned char* key, bool isbublickey);
 
