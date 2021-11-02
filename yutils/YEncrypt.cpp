@@ -11,14 +11,7 @@ std::string YEncrypt::Sha256(std::string buff)
 	SHA256_Update(&ctx, buff.data(), buff.length());
 	SHA256_Final(szSha256Data, &ctx);
 
-	std::string result;
-	for (size_t i = 0; i < 16; i++)
-	{
-		char tmp[4]{ 0 };
-		sprintf_s(tmp, "%02X", szSha256Data[i]);
-		result += tmp;
-	}
-	return result;
+	return (char*)szSha256Data;
 }
 
 std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256)
