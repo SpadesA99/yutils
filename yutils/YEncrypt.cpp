@@ -4,7 +4,7 @@
 
 std::string YEncrypt::Sha256(std::string buff)
 {
-	unsigned char szSha256Data[SHA256_DIGEST_LENGTH]{ 0 };
+	unsigned char szSha256Data[SHA256_DIGEST_LENGTH + 1]{ 0 };
 
 	SHA256_CTX ctx;
 	SHA256_Init(&ctx);
@@ -17,6 +17,9 @@ std::string YEncrypt::Sha256(std::string buff)
 std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256)
 {
 	RSA* rsa = CreateRsa(key, 0);
+	defer(if (rsa) {
+		RSA_free(rsa);	rsa = nullptr;
+	});
 
 	unsigned char* plainBuff = new unsigned char[PLAINBUFFLEN] {0};
 	defer(if (plainBuff) {
@@ -35,11 +38,15 @@ std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256
 	return base64Encode((const char*)plainBuff, sign_length, false);
 }
 
-bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string sign, std::string sha256)
+bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, std::string sign)
 {
 	RSA* rsa = CreateRsa(key, 1);
-
-	int ret = RSA_verify(NID_sha256, (const unsigned char*)sha256.c_str(), sha256.length(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
+	defer(if (rsa) {
+		RSA_free(rsa);	rsa = nullptr;
+	});
+	data = Sha256(data);
+	sign = base64Decode((char*)sign.data(), sign.length(), false);
+	int ret = RSA_verify(NID_sha256, (const unsigned char*)data.c_str(), data.length(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
 	if (ret != 1) {
 		printLastError("public_verifysign_sha256");
 		return false;
@@ -84,24 +91,36 @@ void  YEncrypt::printLastError(const char* msg)
 int  YEncrypt::public_encrypt(unsigned char* data, int data_len, unsigned char* key, unsigned char* encrypted)
 {
 	RSA* rsa = CreateRsa(key, 1);
+	defer(if (rsa) {
+		RSA_free(rsa);	rsa = nullptr;
+	});
 	return RSA_public_encrypt(data_len, data, encrypted, rsa, PKCS1_PADDING);
 }
 
 int  YEncrypt::private_decrypt(unsigned char* enc_data, int data_len, unsigned char* key, unsigned char* decrypted)
 {
 	RSA* rsa = CreateRsa(key, 0);
+	defer(if (rsa) {
+		RSA_free(rsa);	rsa = nullptr;
+	});
 	return RSA_private_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
 }
 
 int  YEncrypt::private_encrypt(unsigned char* data, int data_len, unsigned char* key, unsigned char* encrypted)
 {
 	RSA* rsa = CreateRsa(key, 0);
+	defer(if (rsa) {
+		RSA_free(rsa);	rsa = nullptr;
+	});
 	return RSA_private_encrypt(data_len, data, encrypted, rsa, PKCS1_PADDING);
 }
 
 int  YEncrypt::public_decrypt(unsigned char* enc_data, int data_len, unsigned char* key, unsigned char* decrypted)
 {
 	RSA* rsa = CreateRsa(key, 1);
+	defer(if (rsa) {
+		RSA_free(rsa);	rsa = nullptr;
+	});
 	return  RSA_public_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
 }
 
