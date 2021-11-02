@@ -19,6 +19,10 @@ namespace YEncrypt {
 	//1024最大加密长度
 	static int rsa_block = 1024 / 8 - 11;
 
+	std::string Sha256(std::string buff);
+
+	int private_sign_sha256(unsigned char* key, std::string sha256, unsigned char* encrypted, unsigned int* len);
+
 	RSA* CreateRsa(unsigned char* key, bool isbublickey);
 
 	void printLastError(const char* msg);

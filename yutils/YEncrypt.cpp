@@ -2,6 +2,31 @@
 #include "YCppDefer.hpp"
 #include <windows.h>
 
+std::string YEncrypt::Sha256(std::string buff)
+{
+	unsigned char szSha256Data[SHA256_DIGEST_LENGTH]{ 0 };
+
+	SHA256_CTX ctx;
+	SHA256_Init(&ctx);
+	SHA256_Update(&ctx, buff.data(), buff.length());
+	SHA256_Final(szSha256Data, &ctx);
+
+	std::string result;
+	for (size_t i = 0; i < 16; i++)
+	{
+		char tmp[4]{ 0 };
+		sprintf_s(tmp, "%02X", szSha256Data[i]);
+		result += tmp;
+	}
+	return result;
+}
+
+int YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256, unsigned char* encrypted, unsigned int* len)
+{
+	RSA* rsa = CreateRsa(key, 0);
+	return RSA_sign(NID_sha256, (const unsigned char*)sha256.data(), SHA256_DIGEST_LENGTH, encrypted, len, rsa);
+}
+
 RSA* YEncrypt::CreateRsa(unsigned char* key, bool isbublickey)
 {
 	RSA* rsa = NULL;
@@ -39,29 +64,25 @@ void  YEncrypt::printLastError(const char* msg)
 int  YEncrypt::public_encrypt(unsigned char* data, int data_len, unsigned char* key, unsigned char* encrypted)
 {
 	RSA* rsa = CreateRsa(key, 1);
-	int result = RSA_public_encrypt(data_len, data, encrypted, rsa, PKCS1_PADDING);
-	return result;
+	return RSA_public_encrypt(data_len, data, encrypted, rsa, PKCS1_PADDING);
 }
 
 int  YEncrypt::private_decrypt(unsigned char* enc_data, int data_len, unsigned char* key, unsigned char* decrypted)
 {
 	RSA* rsa = CreateRsa(key, 0);
-	int  result = RSA_private_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
-	return result;
+	return RSA_private_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
 }
 
 int  YEncrypt::private_encrypt(unsigned char* data, int data_len, unsigned char* key, unsigned char* encrypted)
 {
 	RSA* rsa = CreateRsa(key, 0);
-	int result = RSA_private_encrypt(data_len, data, encrypted, rsa, PKCS1_PADDING);
-	return result;
+	return RSA_private_encrypt(data_len, data, encrypted, rsa, PKCS1_PADDING);
 }
 
 int  YEncrypt::public_decrypt(unsigned char* enc_data, int data_len, unsigned char* key, unsigned char* decrypted)
 {
 	RSA* rsa = CreateRsa(key, 1);
-	int  result = RSA_public_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
-	return result;
+	return  RSA_public_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
 }
 
 std::string YEncrypt::base64Encode(const char* buffer, int length, bool newLine)
