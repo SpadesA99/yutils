@@ -23,6 +23,8 @@ namespace YEncrypt {
 
 	std::string private_sign_sha256(unsigned char* key, std::string sha256);
 
+	bool public_verifysign_sha256(unsigned char* key, std::string sign, std::string sha256);
+
 	RSA* CreateRsa(unsigned char* key, bool isbublickey);
 
 	void printLastError(const char* msg);

@@ -35,6 +35,18 @@ std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256
 	return base64Encode((const char*)plainBuff, sign_length, false);
 }
 
+bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string sign, std::string sha256)
+{
+	RSA* rsa = CreateRsa(key, 1);
+
+	int ret = RSA_verify(NID_sha256, (const unsigned char*)sha256.c_str(), sha256.length(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
+	if (ret != 1) {
+		printLastError("public_verifysign_sha256");
+		return false;
+	}
+	return true;
+}
+
 RSA* YEncrypt::CreateRsa(unsigned char* key, bool isbublickey)
 {
 	RSA* rsa = NULL;
