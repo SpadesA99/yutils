@@ -2,14 +2,13 @@
 #include "YCppDefer.hpp"
 #include <windows.h>
 
-std::shared_ptr<unsigned char[]> YEncrypt::Sha256(std::string buff)
+std::vector<unsigned char> YEncrypt::Sha256(std::string buff)
 {
-	std::shared_ptr<unsigned char[]> ptr(new unsigned char[SHA256_DIGEST_LENGTH] { 0 });
-
+	std::vector<unsigned char> ptr(SHA256_DIGEST_LENGTH, 0);
 	SHA256_CTX ctx;
 	SHA256_Init(&ctx);
 	SHA256_Update(&ctx, buff.data(), buff.length());
-	SHA256_Final(ptr.get(), &ctx);
+	SHA256_Final(ptr.data(), &ctx);
 
 	return ptr;
 }
@@ -46,7 +45,7 @@ bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, st
 	});
 	auto udata = Sha256(data);
 	sign = base64Decode((char*)sign.data(), sign.length(), false);
-	int ret = RSA_verify(NID_sha256, udata.get(), data.length(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
+	int ret = RSA_verify(NID_sha256, udata.data(), udata.size(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
 	if (ret != 1) {
 		printLastError("public_verifysign_sha256");
 		return false;
@@ -258,14 +257,14 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, i
 	return result;
 }
 
-std::shared_ptr<unsigned char[]> YEncrypt::Md5(std::string buff)
+std::vector<unsigned char> YEncrypt::Md5(std::string buff)
 {
-	std::shared_ptr<unsigned char[]> ptr(new unsigned char[MD5_DIGEST_LENGTH] { 0 });
+	std::vector<unsigned char> ptr(MD5_DIGEST_LENGTH, 0);
 
 	MD5_CTX ctx;
 	MD5_Init(&ctx);
 	MD5_Update(&ctx, buff.data(), buff.length());
-	MD5_Final(ptr.get(), &ctx);
+	MD5_Final(ptr.data(), &ctx);
 
 	return ptr;
 }

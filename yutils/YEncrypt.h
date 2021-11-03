@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <memory>
 #include <openssl/buffer.h>
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
@@ -20,7 +19,7 @@ namespace YEncrypt {
 	//1024最大加密长度
 	static int rsa_block = 1024 / 8 - 11;
 
-	std::shared_ptr<unsigned char[]> Sha256(std::string buff);
+	std::vector<unsigned char> Sha256(std::string buff);
 
 	std::string private_sign_sha256(unsigned char* key, std::string sha256);
 
@@ -48,7 +47,7 @@ namespace YEncrypt {
 
 	std::string RsaLongDecrypt(std::string rawbody, unsigned char* key, int block_len, bool isbublickey);
 
-	std::shared_ptr<unsigned char[]> Md5(std::string buff);
+	std::vector<unsigned char> Md5(std::string buff);
 
 	std::string ByteToString(std::shared_ptr<unsigned char[]> ptr);
 }
