@@ -49,5 +49,5 @@ namespace YEncrypt {
 
 	std::vector<unsigned char> Md5(std::string buff);
 
-	std::string ByteToString(std::shared_ptr<unsigned char[]> ptr);
+	std::string ByteToString(std::vector<unsigned char> ptr);
 }

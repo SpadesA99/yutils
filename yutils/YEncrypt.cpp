@@ -269,10 +269,10 @@ std::vector<unsigned char> YEncrypt::Md5(std::string buff)
 	return ptr;
 }
 
-std::string YEncrypt::ByteToString(std::shared_ptr<unsigned char[]> ptr)
+std::string YEncrypt::ByteToString(std::vector<unsigned char> ptr)
 {
 	std::string result;
-	for (size_t i = 0; i < 16; i++)
+	for (size_t i = 0; i < ptr.size(); i++)
 	{
 		char tmp[4]{ 0 };
 		sprintf_s(tmp, "%02X", ptr[i]);
