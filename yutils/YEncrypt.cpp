@@ -2,16 +2,16 @@
 #include "YCppDefer.hpp"
 #include <windows.h>
 
-std::string YEncrypt::Sha256(std::string buff)
+std::shared_ptr<unsigned char[]> YEncrypt::Sha256(std::string buff)
 {
-	unsigned char szSha256Data[SHA256_DIGEST_LENGTH + 1]{ 0 };
+	std::shared_ptr<unsigned char[]> ptr(new unsigned char[SHA256_DIGEST_LENGTH] { 0 });
 
 	SHA256_CTX ctx;
 	SHA256_Init(&ctx);
 	SHA256_Update(&ctx, buff.data(), buff.length());
-	SHA256_Final(szSha256Data, &ctx);
+	SHA256_Final(ptr.get(), &ctx);
 
-	return (char*)szSha256Data;
+	return ptr;
 }
 
 std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256)
@@ -44,9 +44,9 @@ bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, st
 	defer(if (rsa) {
 		RSA_free(rsa);	rsa = nullptr;
 	});
-	data = Sha256(data);
+	auto udata = Sha256(data);
 	sign = base64Decode((char*)sign.data(), sign.length(), false);
-	int ret = RSA_verify(NID_sha256, (const unsigned char*)data.c_str(), data.length(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
+	int ret = RSA_verify(NID_sha256, udata.get(), data.length(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
 	if (ret != 1) {
 		printLastError("public_verifysign_sha256");
 		return false;
@@ -258,21 +258,25 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, i
 	return result;
 }
 
-std::string YEncrypt::Md5(std::string buff)
+std::shared_ptr<unsigned char[]> YEncrypt::Md5(std::string buff)
 {
-	MD5_CTX ctx;
-	unsigned char outmd[16];
+	std::shared_ptr<unsigned char[]> ptr(new unsigned char[MD5_DIGEST_LENGTH] { 0 });
 
-	memset(outmd, 0, sizeof(outmd));
+	MD5_CTX ctx;
 	MD5_Init(&ctx);
 	MD5_Update(&ctx, buff.data(), buff.length());
-	MD5_Final(outmd, &ctx);
+	MD5_Final(ptr.get(), &ctx);
 
+	return ptr;
+}
+
+std::string YEncrypt::ByteToString(std::shared_ptr<unsigned char[]> ptr)
+{
 	std::string result;
 	for (size_t i = 0; i < 16; i++)
 	{
 		char tmp[4]{ 0 };
-		sprintf_s(tmp, "%02X", outmd[i]);
+		sprintf_s(tmp, "%02X", ptr[i]);
 		result += tmp;
 	}
 	return result;
