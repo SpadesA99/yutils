@@ -37,9 +37,9 @@ namespace YEncrypt {
 
 	int public_decrypt(unsigned char* enc_data, int data_len, unsigned char* key, unsigned char* decrypted);
 
-	std::string base64Encode(const char* buffer, int length, bool newLine);
+	std::string base64Encode(const char* buffer, int length);
 
-	std::string base64Decode(char* input, int length, bool newLine);
+	std::string base64Decode(char* input, int length);
 
 #define PLAINBUFFLEN 0x1000
 

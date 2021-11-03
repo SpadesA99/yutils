@@ -34,7 +34,7 @@ std::string YEncrypt::private_sign_sha256(unsigned char* key, std::vector<unsign
 		return "";
 	}
 
-	return base64Encode((const char*)plainBuff, sign_length, false);
+	return base64Encode((const char*)plainBuff, sign_length);
 }
 
 bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, std::string sign)
@@ -43,8 +43,8 @@ bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, st
 	defer(if (rsa) {
 		RSA_free(rsa);	rsa = nullptr;
 	});
-	auto udata = Sha256(base64Decode(data.data(), data.length(), false));
-	sign = base64Decode((char*)sign.data(), sign.length(), false);
+	auto udata = Sha256(base64Decode(data.data(), data.length()));
+	sign = base64Decode((char*)sign.data(), sign.length());
 	int ret = RSA_verify(NID_sha256, udata.data(), udata.size(), (const unsigned char*)sign.data(), sign.length(), rsa);
 	if (ret != 1) {
 		printLastError("public_verifysign_sha256");
@@ -123,7 +123,7 @@ int  YEncrypt::public_decrypt(unsigned char* enc_data, int data_len, unsigned ch
 	return  RSA_public_decrypt(data_len, enc_data, decrypted, rsa, PKCS1_PADDING);
 }
 
-std::string YEncrypt::base64Encode(const char* buffer, int length, bool newLine)
+std::string YEncrypt::base64Encode(const char* buffer, int length)
 {
 	auto b64 = BIO_new(BIO_f_base64());
 	if (!b64)
@@ -132,9 +132,7 @@ std::string YEncrypt::base64Encode(const char* buffer, int length, bool newLine)
 	}
 	defer(BIO_free_all(b64));
 
-	if (!newLine) {
-		BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-	}
+	BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
 	auto bmem = BIO_new(BIO_s_mem());
 	b64 = BIO_push(b64, bmem);
 	BIO_write(b64, buffer, length);
@@ -144,12 +142,12 @@ std::string YEncrypt::base64Encode(const char* buffer, int length, bool newLine)
 	BIO_get_mem_ptr(b64, &bptr);
 	BIO_set_close(b64, BIO_NOCLOSE);
 
-	std::string result(bptr->length, 0);
+	std::string result(bptr->length + 1, 0);
 	memcpy((void*)result.data(), bptr->data, bptr->length);
 	return result;
 }
 
-std::string YEncrypt::base64Decode(char* input, int length, bool newLine)
+std::string YEncrypt::base64Decode(char* input, int length)
 {
 	std::string result;
 	result.resize(length + 1, 0);
@@ -161,9 +159,7 @@ std::string YEncrypt::base64Decode(char* input, int length, bool newLine)
 	}
 	defer(BIO_free_all(b64));
 
-	if (!newLine) {
-		BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-	}
+	BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
 	auto bmem = BIO_new_mem_buf(input, length);
 	bmem = BIO_push(b64, bmem);
 	auto len = BIO_read(bmem, (void*)result.data(), length);
@@ -199,7 +195,7 @@ std::string  YEncrypt::RsaLongEncrypt(std::string rawbody, unsigned char* key, i
 			printLastError((char*)"public_encrypt failed ");
 			return "";
 		}
-		encplain.push_back(base64Encode((const char*)plainBuff, encrypted_length, false));
+		encplain.push_back(base64Encode((const char*)plainBuff, encrypted_length));
 	}
 	std::string result;
 	for (auto& item : encplain) {
@@ -236,7 +232,7 @@ std::string  YEncrypt::RsaLongDecrypt(std::string rawbody, unsigned char* key, i
 	});
 	for (auto& item : encplain) {
 		ZeroMemory(plainBuff, PLAINBUFFLEN);
-		auto plain = base64Decode((char*)item.data(), item.length(), false);
+		auto plain = base64Decode((char*)item.data(), item.length());
 		int decrypt_length = -1;
 		if (isbublickey) {
 			decrypt_length = public_decrypt((unsigned char*)plain.data(), plain.length(), key, plainBuff);
