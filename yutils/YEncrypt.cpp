@@ -43,7 +43,7 @@ bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, st
 	defer(if (rsa) {
 		RSA_free(rsa);	rsa = nullptr;
 	});
-	auto udata = Sha256(data);
+	auto udata = Sha256(base64Decode(data.data(), data.length(), false));
 	sign = base64Decode((char*)sign.data(), sign.length(), false);
 	int ret = RSA_verify(NID_sha256, udata.data(), udata.size(), (const unsigned char*)sign.data(), sign.length(), rsa);
 	if (ret != 1) {
