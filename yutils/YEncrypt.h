@@ -21,7 +21,7 @@ namespace YEncrypt {
 
 	std::vector<unsigned char> Sha256(std::string buff);
 
-	std::string private_sign_sha256(unsigned char* key, std::string sha256);
+	std::string private_sign_sha256(unsigned char* key, std::vector<unsigned char> sha256);
 
 	bool public_verifysign_sha256(unsigned char* key, std::string data, std::string sign);
 

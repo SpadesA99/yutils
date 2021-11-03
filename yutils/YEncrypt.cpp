@@ -13,7 +13,7 @@ std::vector<unsigned char> YEncrypt::Sha256(std::string buff)
 	return ptr;
 }
 
-std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256)
+std::string YEncrypt::private_sign_sha256(unsigned char* key, std::vector<unsigned char> sha256)
 {
 	RSA* rsa = CreateRsa(key, 0);
 	defer(if (rsa) {
@@ -27,7 +27,7 @@ std::string YEncrypt::private_sign_sha256(unsigned char* key, std::string sha256
 	});
 	unsigned int sign_length = 0;
 
-	auto sign_res = RSA_sign(NID_sha256, (const unsigned char*)sha256.data(), SHA256_DIGEST_LENGTH, plainBuff, &sign_length, rsa);
+	auto sign_res = RSA_sign(NID_sha256, sha256.data(), sha256.size(), plainBuff, &sign_length, rsa);
 	if (sign_res == -1)
 	{
 		printLastError("private_decrypt");
@@ -45,7 +45,7 @@ bool YEncrypt::public_verifysign_sha256(unsigned char* key, std::string data, st
 	});
 	auto udata = Sha256(data);
 	sign = base64Decode((char*)sign.data(), sign.length(), false);
-	int ret = RSA_verify(NID_sha256, udata.data(), udata.size(), (const unsigned char*)sign.c_str(), sign.length(), rsa);
+	int ret = RSA_verify(NID_sha256, udata.data(), udata.size(), (const unsigned char*)sign.data(), sign.length(), rsa);
 	if (ret != 1) {
 		printLastError("public_verifysign_sha256");
 		return false;
