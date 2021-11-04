@@ -4,6 +4,7 @@
 
 class YConsole
 {
+public:
 	YConsole();
 	~YConsole();
 };
