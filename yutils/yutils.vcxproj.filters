@@ -19,6 +19,9 @@
     <Filter Include="encrypt">
       <UniqueIdentifier>{5f756724-1ff6-413a-9c0b-fb9fac639fa2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="console">
+      <UniqueIdentifier>{e99d3d58-d07c-4376-9c63-1bbbe4987498}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StaticLibTemplates.h">
@@ -33,6 +36,9 @@
     <ClInclude Include="YEncrypt.h">
       <Filter>encrypt</Filter>
     </ClInclude>
+    <ClInclude Include="YConsole.h">
+      <Filter>console</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StaticLibTemplates.cpp">
@@ -40,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="YEncrypt.cpp">
       <Filter>encrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="YConsole.cpp">
+      <Filter>console</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

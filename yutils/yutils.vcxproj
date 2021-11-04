@@ -337,12 +337,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="YConsole.h" />
     <ClInclude Include="YEncrypt.h" />
     <ClInclude Include="StaticLibTemplates.h" />
     <ClInclude Include="YCppDefer.hpp" />
     <ClInclude Include="YStringConvert.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="YConsole.cpp" />
     <ClCompile Include="YEncrypt.cpp" />
     <ClCompile Include="StaticLibTemplates.cpp" />
   </ItemGroup>
