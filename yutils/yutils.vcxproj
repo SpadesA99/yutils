@@ -342,11 +342,13 @@
     <ClInclude Include="StaticLibTemplates.h" />
     <ClInclude Include="YCppDefer.hpp" />
     <ClInclude Include="YStringConvert.hpp" />
+    <ClInclude Include="YWinUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="YConsole.cpp" />
     <ClCompile Include="YEncrypt.cpp" />
     <ClCompile Include="StaticLibTemplates.cpp" />
+    <ClCompile Include="YWinUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

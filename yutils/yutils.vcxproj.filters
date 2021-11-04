@@ -39,6 +39,9 @@
     <ClInclude Include="YConsole.h">
       <Filter>console</Filter>
     </ClInclude>
+    <ClInclude Include="YWinUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StaticLibTemplates.cpp">
@@ -49,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="YConsole.cpp">
       <Filter>console</Filter>
+    </ClCompile>
+    <ClCompile Include="YWinUtils.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
