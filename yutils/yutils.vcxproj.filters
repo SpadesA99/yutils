@@ -22,11 +22,11 @@
     <Filter Include="console">
       <UniqueIdentifier>{e99d3d58-d07c-4376-9c63-1bbbe4987498}</UniqueIdentifier>
     </Filter>
+    <Filter Include="file">
+      <UniqueIdentifier>{8f763635-8353-4caf-9d88-a710a97c72c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="StaticLibTemplates.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="YCppDefer.hpp">
       <Filter>string_utils</Filter>
     </ClInclude>
@@ -42,11 +42,11 @@
     <ClInclude Include="YWinUtils.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="YFileUtils.h">
+      <Filter>file</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="StaticLibTemplates.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="YEncrypt.cpp">
       <Filter>encrypt</Filter>
     </ClCompile>
@@ -55,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="YWinUtils.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="YFileUtils.cpp">
+      <Filter>file</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
